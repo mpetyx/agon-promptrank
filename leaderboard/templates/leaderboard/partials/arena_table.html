@@ -1,0 +1,54 @@
+<table class="min-w-full divide-y divide-white/5">
+    <thead>
+        <tr>
+            <th scope="col" class="py-4 pl-6 pr-3 text-left text-xs font-bold uppercase tracking-wider text-gray-400">Rank</th>
+            <th scope="col" class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-gray-400">Agent</th>
+            <th scope="col" class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-gray-400">Department</th>
+            <th scope="col" class="px-6 py-4 text-right text-xs font-bold uppercase tracking-wider text-gray-400">Power Level</th>
+            <th scope="col" class="px-6 py-4 text-right text-xs font-bold uppercase tracking-wider text-gray-400">Profile</th>
+        </tr>
+    </thead>
+    <tbody class="divide-y divide-white/5 bg-transparent">
+        {% for u in users %}
+        <tr class="group hover:bg-white/5 transition-all duration-200">
+            <td class="whitespace-nowrap py-5 pl-6 pr-3 text-lg font-black text-white">
+                <span class="inline-flex w-10 h-10 items-center justify-center rounded-xl {% if forloop.counter == 1 %}bg-gradient-to-br from-yellow-400 to-amber-600 text-white shadow-lg shadow-yellow-500/20{% elif forloop.counter == 2 %}bg-gradient-to-br from-slate-300 to-slate-500 text-white{% elif forloop.counter == 3 %}bg-gradient-to-br from-orange-400 to-yellow-700 text-white{% else %}bg-white/5 text-gray-400{% endif %}">
+                    {{ forloop.counter }}
+                </span>
+            </td>
+            <td class="whitespace-nowrap px-6 py-5">
+                <div class="flex items-center">
+                    <div class="h-10 w-10 rounded-full bg-gradient-to-br from-indigo-500 to-pink-500 p-0.5 shadow-lg group-hover:scale-110 transition-transform">
+                        <div class="h-full w-full rounded-full bg-gray-900 flex items-center justify-center text-white font-bold text-sm">
+                            {{ u.username|make_list|first|upper }}
+                        </div>
+                    </div>
+                    <div class="ml-4">
+                        <div class="text-sm font-bold text-white">{{ u.username }}</div>
+                        <div class="text-xs text-indigo-400">{{ u.github_handle|default:"No Integration" }}</div>
+                    </div>
+                </div>
+            </td>
+            <td class="whitespace-nowrap px-6 py-5">
+                <span class="inline-flex items-center gap-1.5 rounded-full bg-white/5 border border-white/10 px-3 py-1 text-xs font-medium text-gray-300">
+                    <svg class="h-1.5 w-1.5 fill-pink-400" viewBox="0 0 6 6" aria-hidden="true"><circle cx="3" cy="3" r="3" /></svg>
+                    {{ u.department.name|default:"Rogue" }}
+                </span>
+            </td>
+            <td class="whitespace-nowrap px-6 py-5 text-right font-black text-xl text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-400">
+                {{ u.total_score|default:"0.0"|floatformat:1 }}
+            </td>
+            <td class="whitespace-nowrap px-6 py-5 text-right">
+                <a href="/u/{{ u.username }}/" class="inline-flex items-center justify-center rounded-lg bg-white/10 px-4 py-2 text-sm font-semibold text-white hover:bg-white/20 transition-colors border border-white/5">
+                    View
+                    <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                </a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="5" class="py-16 text-center text-gray-500 italic">The Arena slumbers. Awaken the machines.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

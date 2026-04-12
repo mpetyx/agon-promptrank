@@ -1,0 +1,25 @@
+{% extends 'leaderboard/base.html' %}
+
+{% block content %}
+<div class="px-4 sm:px-0">
+    <div class="sm:flex sm:items-center">
+        <div class="sm:flex-auto">
+            <h1 class="text-base font-semibold leading-6 text-white text-3xl">Agon Promptrank</h1>
+            <p class="mt-2 text-sm text-gray-400">A strict, anti-cheat gamified platform for AI tool usage.</p>
+        </div>
+        <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none flex space-x-2">
+            <button hx-get="/?filter=all_time" hx-target="#arena_results" class="block rounded-md bg-purple-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-purple-500">All-Time</button>
+            <button hx-get="/?filter=this_week" hx-target="#arena_results" class="block rounded-md bg-gray-700 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-gray-600">This Week</button>
+        </div>
+    </div>
+    <div class="mt-8 flow-root">
+        <div class="mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+            <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+                <div id="arena_results" class="overflow-hidden shadow ring-1 ring-white/5 sm:rounded-lg backdrop-blur-md bg-white/5">
+                    {% include 'leaderboard/partials/arena_table.html' %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

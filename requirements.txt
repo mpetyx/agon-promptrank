@@ -1,0 +1,10 @@
+Django>=4.2,<5.0
+djangorestframework>=3.15.0rc1
+django-cors-headers>=4.3.1
+celery>=5.3.6
+redis>=5.0.3
+django-tailwind
+django-htmx>=1.17.3
+django-environ>=0.11.2
+coverage>=7.0.0
+requests
