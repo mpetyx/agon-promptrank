@@ -13,6 +13,43 @@
         </div>
     </div>
     <div class="mt-8 flow-root">
+        <!-- Live Clashes Section -->
+        {% if clashes_data %}
+        <div class="mb-10">
+            <h2 class="font-heading text-xl md:text-2xl font-bold text-white mb-4 flex items-center gap-3">
+                <span class="text-yellow-400">⚔️</span> Live Clashes
+            </h2>
+            <div class="grid gap-6 md:grid-cols-2">
+            {% for cdata in clashes_data %}
+                <div class="glass-panel overflow-hidden shadow-2xl ring-1 ring-white/5 sm:rounded-2xl backdrop-blur-md bg-white/5 p-6 relative group border border-white/5 hover:border-white/20 transition-all">
+                    <div class="absolute -right-10 -top-10 w-32 h-32 bg-indigo-500/10 rounded-full blur-2xl group-hover:bg-indigo-500/20 transition-all"></div>
+                    <div class="absolute -left-10 -bottom-10 w-32 h-32 bg-pink-500/10 rounded-full blur-2xl group-hover:bg-pink-500/20 transition-all"></div>
+                    <h3 class="text-lg font-bold text-white text-center mb-4 relative z-10">{{ cdata.clash.name }}</h3>
+                    
+                    <div class="flex justify-between text-sm font-black uppercase tracking-wider mb-2 relative z-10 w-full px-1">
+                        <span class="text-indigo-400 truncate pr-2">{{ cdata.clash.department1.name }} <span class="text-white/50 font-normal">({{ cdata.d1_score|floatformat:1 }})</span></span>
+                        <span class="text-pink-400 truncate pl-2 text-right"><span class="text-white/50 font-normal">({{ cdata.d2_score|floatformat:1 }})</span> {{ cdata.clash.department2.name }}</span>
+                    </div>
+                    
+                    <!-- Tug of War Bar -->
+                    <div class="w-full bg-gray-800 rounded-full h-4 overflow-hidden flex shadow-inner relative z-10">
+                        <div class="bg-gradient-to-r from-indigo-600 to-indigo-400 h-4 transition-all duration-1000 ease-out" style="width: {{ cdata.d1_pct }}%"></div>
+                        <div class="bg-gradient-to-l from-pink-600 to-pink-400 h-4 transition-all duration-1000 ease-out" style="width: {{ cdata.d2_pct }}%"></div>
+                    </div>
+                    
+                    {% if cdata.d1_pct > 50 %}
+                    <p class="text-[11px] font-bold uppercase tracking-wider text-center text-indigo-300 mt-4 relative z-10">{{ cdata.clash.department1.name }} is dominating!</p>
+                    {% elif cdata.d2_pct > 50 %}
+                    <p class="text-[11px] font-bold uppercase tracking-wider text-center text-pink-300 mt-4 relative z-10">{{ cdata.clash.department2.name }} is pulling ahead!</p>
+                    {% else %}
+                    <p class="text-[11px] font-bold uppercase tracking-wider text-center text-gray-400 mt-4 relative z-10">It's a dead heat!</p>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
         <div class="mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
             <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
                 <div id="arena_results" class="overflow-hidden shadow ring-1 ring-white/5 sm:rounded-lg backdrop-blur-md bg-white/5">
