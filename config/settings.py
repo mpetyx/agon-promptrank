@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'scoring',
     'leaderboard',
     'notifications',
+    'analytics',
 ]
 
 AUTH_USER_MODEL = 'users.CustomUser'

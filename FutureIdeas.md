@@ -67,3 +67,14 @@ The goal of these future ideas is to deepen user engagement, provide better insi
 For immediate impact with manageable implementation effort, the following two features are recommended to be prioritized:
 1.  **Time-Boxed Leaderboards (Seasons)**
 2.  **Personalized Analytics Dashboards**
+
+---
+
+## ✅ Shipped
+
+The following proposals from this document have been implemented and are live:
+
+* **Streaks & Daily Quests** — `UserStreak` tracks consecutive-day usage; `Quest` + `UserQuestProgress` support daily and weekly challenges. Completion grants bonus points and a ticker item. Surfaced on the Trophy Room.
+* **Live Action Ticker** — `ActionFeedItem` model powers an HTMX-polled feed on the Arena. Emits events for badges, quests, streak milestones, point milestones, and season crowns.
+* **Time-Boxed Leaderboards (Seasons)** — `Season` + `SeasonArchive` models, Hall of Fame view, per-season detail page, and a Celery task (`archive_ended_seasons`) that freezes final standings once a season's end-date has passed.
+* **Cost & ROI Estimation Dashboard** — new `analytics/` app with a `ToolCost` model and a staff-only ROI dashboard (`/analytics/roi/`) showing monthly spend, estimated value generated, dev hours saved, per-tool ROI%, a department breakdown, and a 30-day value trend.

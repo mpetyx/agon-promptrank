@@ -1,0 +1,42 @@
+{% extends 'leaderboard/base.html' %}
+
+{% block content %}
+<div class="px-4 sm:px-0">
+    <div class="mb-8">
+        <a href="{% url 'hall_of_fame' %}" class="text-xs uppercase tracking-widest text-indigo-300 hover:text-white">← Hall of Fame</a>
+        <h1 class="font-heading text-4xl font-black tracking-tight text-white mt-2">{{ season.name }}</h1>
+        <p class="text-sm text-gray-400">{{ season.start_date|date:"M j, Y" }} → {{ season.end_date|date:"M j, Y" }}
+            {% if season.is_archived %}<span class="ml-2 text-yellow-300">· Archived</span>{% endif %}
+        </p>
+    </div>
+
+    <div class="glass-panel rounded-2xl overflow-hidden border border-white/5">
+        <table class="min-w-full divide-y divide-white/5">
+            <thead class="bg-white/5">
+                <tr>
+                    <th class="px-4 py-3 text-left text-[11px] uppercase tracking-widest text-gray-400">Rank</th>
+                    <th class="px-4 py-3 text-left text-[11px] uppercase tracking-widest text-gray-400">Agent</th>
+                    <th class="px-4 py-3 text-left text-[11px] uppercase tracking-widest text-gray-400">Department</th>
+                    <th class="px-4 py-3 text-right text-[11px] uppercase tracking-widest text-gray-400">Final Score</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-white/5">
+                {% for row in archives %}
+                <tr class="hover:bg-white/5">
+                    <td class="px-4 py-3 font-bold text-white">
+                        {% if row.rank == 1 %}🥇 1{% elif row.rank == 2 %}🥈 2{% elif row.rank == 3 %}🥉 3{% else %}#{{ row.rank }}{% endif %}
+                    </td>
+                    <td class="px-4 py-3">
+                        <a href="{% url 'trophy_room' row.user.username %}" class="text-white hover:underline">{{ row.user.username }}</a>
+                    </td>
+                    <td class="px-4 py-3 text-gray-300">{{ row.department_name|default:"Unaligned" }}</td>
+                    <td class="px-4 py-3 text-right font-semibold text-emerald-300">{{ row.final_score|floatformat:1 }}</td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="4" class="px-4 py-10 text-center text-gray-500 italic">No one scored during this season.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

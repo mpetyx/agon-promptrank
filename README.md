@@ -26,6 +26,11 @@ By tapping into cross-platform webhooks, Agon PromptRank creates an engaging com
 * **Zero-Code Tool Ingestion**: Configure dynamic JSON mappers directly in the Django Admin interface to support *any* third-party AI tool webhook out-of-the-box.
 * **Smart Anti-Cheat Engine**: Prevents leaderboard manipulation using asynchronous Celery workers to detect and throttle rapid-fire API script-kiddie spam.
 * **Leveled Handicaps**: Levels the playing field internally by dynamically grading point multipliers based on Department structures (e.g., matching Marketing vs. active Software Engineers).
+* **Seasons & Hall of Fame**: Time-boxed leaderboard cycles auto-archive on end-date; the Hall of Fame preserves every season's podium so new hires can still catch up.
+* **Streaks & Daily / Weekly Quests**: Consecutive-day usage streaks plus admin-configurable challenges ("Generate 5 Copilot completions today") that reward bonus points on completion.
+* **ROI / Cost Command Center**: Staff-only dashboard tying `ToolCost` configuration to live ActivityLog volume — shows monthly spend, value generated, dev hours saved, per-tool ROI%, and a 30-day trend. The killer feature for budget-holders.
+* **Live Action Ticker**: Real-time HTMX-polled feed of badges unlocked, quest completions, streak milestones, point milestones, and season crowns.
+* **Department Clashes & Rival Tracking**: Pit departments against each other on a tug-of-war bar; private Trophy Room shows your closest same-department rival and predicts overtake pace.
 * **Premium Glassmorphic UI**: Highly reactive and aesthetic frontend engineered natively in Python using **HTMX**, **Chart.js**, and **TailwindCSS** (No heavy JavaScript build steps required!).
 * **Outbound Milestone Webhooks**: Asynchronously publishes corporate achievements into Slack/Teams channels when users cross predefined trophy thresholds.
 * **Enterprise Grade Testing**: Covered by an 80%+ native unit-testing footprint.
@@ -39,9 +44,10 @@ The MVP runs purely Python-native, leveraging Django for ORM/Admin/Routing, DRF 
 /config/                  # Django Settings & Routing
 /users/                   # Identity profiles & Department schemas
 /ingestion/               # Deep-nested dynamic DRF Webhook Endpoints
-/scoring/                 # Async anti-cheat celery workers & Score processing
-/leaderboard/             # HTMX & Tailwind UI Views (Arena, Trophies, Profile Dashboards)
+/scoring/                 # Async anti-cheat celery workers, Score processing, Streaks & Quests
+/leaderboard/             # HTMX & Tailwind UI Views (Arena, Trophies, Seasons, Hall of Fame, Action Ticker)
 /notifications/           # Outbound webhook emitters for Badges
+/analytics/               # ROI / Cost dashboard — ToolCost config & financial reports
 ```
 
 ---

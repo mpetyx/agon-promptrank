@@ -23,20 +23,85 @@
             </div>
 
             <!-- Heavy Metrics -->
-            <div class="mt-10 grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-2xl">
+            <div class="mt-10 grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-3xl">
                 <div class="glass-panel rounded-2xl p-6 relative overflow-hidden group hover:bg-white/5 transition-colors">
                     <div class="absolute -right-4 -top-4 w-24 h-24 bg-green-500/10 rounded-full blur-xl group-hover:bg-green-500/20 transition-all"></div>
-                    <p class="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-2">Total Power Leveraged</p>
-                    <p class="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-300">{{ total_score|floatformat:1 }}</p>
+                    <p class="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-2">Total Power</p>
+                    <p class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-300">{{ total_score|floatformat:1 }}</p>
+                </div>
+                <div class="glass-panel rounded-2xl p-6 relative overflow-hidden group hover:bg-white/5 transition-colors">
+                    <div class="absolute -right-4 -top-4 w-24 h-24 bg-orange-500/10 rounded-full blur-xl group-hover:bg-orange-500/20 transition-all"></div>
+                    <p class="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-2">Streak</p>
+                    <p class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-red-400">{{ streak.current_streak }} <span class="text-lg text-gray-500 font-normal">days</span></p>
+                    <p class="text-xs text-gray-500 mt-2">Best: {{ streak.longest_streak }} 🔥</p>
                 </div>
                 <div class="glass-panel rounded-2xl p-6 relative overflow-hidden group hover:bg-white/5 transition-colors">
                     <div class="absolute -right-4 -top-4 w-24 h-24 bg-purple-500/10 rounded-full blur-xl group-hover:bg-purple-500/20 transition-all"></div>
-                    <p class="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-2">Actions Proxied</p>
-                    <p class="text-5xl font-black text-white">{{ score_logs|length|default:"0" }} <span class="text-lg text-gray-500 font-normal">logs</span></p>
+                    <p class="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-2">Actions</p>
+                    <p class="text-4xl font-black text-white">{{ score_logs|length|default:"0" }} <span class="text-lg text-gray-500 font-normal">logs</span></p>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Quests -->
+    {% if quest_rows %}
+    <div class="glass-panel rounded-3xl p-6 lg:p-8 mb-10 w-full shadow-2xl relative overflow-hidden border border-white/5">
+        <div class="absolute -left-20 -top-20 w-64 h-64 bg-yellow-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        <h2 class="font-heading text-xl lg:text-2xl font-bold text-white mb-6 flex items-center gap-3 relative z-10">
+            <span class="text-yellow-400">🎯</span> Active Quests
+        </h2>
+        <div class="grid gap-4 md:grid-cols-2 relative z-10">
+            {% for row in quest_rows %}
+            <div class="rounded-2xl bg-black/20 border border-white/5 p-4 {% if row.complete %}ring-1 ring-emerald-400/40{% endif %}">
+                <div class="flex items-start justify-between gap-3">
+                    <div class="flex items-center gap-3 min-w-0">
+                        <span class="text-2xl">{{ row.quest.icon|default:"🎯" }}</span>
+                        <div class="min-w-0">
+                            <p class="font-bold text-white truncate">{{ row.quest.name }}</p>
+                            <p class="text-xs text-gray-400 truncate">{{ row.quest.description }}</p>
+                        </div>
+                    </div>
+                    <span class="shrink-0 text-[10px] uppercase tracking-widest {% if row.complete %}text-emerald-400{% else %}text-gray-400{% endif %}">
+                        {% if row.complete %}✅ Complete{% else %}{{ row.quest.get_scope_display }}{% endif %}
+                    </span>
+                </div>
+                <div class="mt-3 flex items-center gap-3">
+                    <div class="flex-1 h-2 bg-gray-800 rounded-full overflow-hidden">
+                        <div class="h-2 rounded-full bg-gradient-to-r {% if row.complete %}from-emerald-400 to-green-300{% else %}from-yellow-400 to-orange-400{% endif %}" style="width: {{ row.pct }}%"></div>
+                    </div>
+                    <span class="text-xs font-semibold text-gray-300 whitespace-nowrap">{{ row.current }}/{{ row.quest.target_count }}</span>
+                </div>
+                <p class="text-[10px] uppercase tracking-widest text-gray-500 mt-2">Reward: +{{ row.quest.reward_points|floatformat:1 }} pts</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Season Archives for this user -->
+    {% if archives %}
+    <div class="glass-panel rounded-3xl p-6 lg:p-8 mb-10 w-full shadow-2xl relative overflow-hidden border border-white/5">
+        <div class="absolute -right-20 -bottom-20 w-64 h-64 bg-yellow-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        <h2 class="font-heading text-xl lg:text-2xl font-bold text-white mb-6 flex items-center gap-3 relative z-10">
+            <span class="text-yellow-300">🏅</span> Season Finishes
+        </h2>
+        <ul class="divide-y divide-white/5 relative z-10">
+            {% for archive in archives %}
+            <li class="py-3 flex items-center justify-between">
+                <div>
+                    <a href="{% url 'season_detail' archive.season.id %}" class="text-white font-semibold hover:underline">{{ archive.season.name }}</a>
+                    <p class="text-xs text-gray-400">Ended {{ archive.season.end_date|date:"M j, Y" }}</p>
+                </div>
+                <div class="text-right">
+                    <p class="text-lg font-black text-white">#{{ archive.rank }}</p>
+                    <p class="text-xs text-gray-400">{{ archive.final_score|floatformat:1 }} pts</p>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
 
     <!-- Rival Tracking Card -->
     {% if rival %}

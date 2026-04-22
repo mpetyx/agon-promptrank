@@ -24,6 +24,13 @@
             50% { transform: translateY(-10px); }
             100% { transform: translateY(0px); }
         }
+        .feed-enter {
+            animation: feedSlide 0.45s ease-out;
+        }
+        @keyframes feedSlide {
+            from { transform: translateY(-6px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
     </style>
 </head>
 <body class="text-white min-h-screen flex flex-col relative overflow-x-hidden">
@@ -41,7 +48,11 @@
                     </a>
                     <div class="hidden md:flex space-x-2">
                         <a href="/" class="text-gray-300 hover:text-white hover:bg-white/5 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300">The Arena</a>
-                        <a href="/command-center/" class="text-gray-300 hover:text-white hover:bg-white/5 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300">Command Center</a>
+                        <a href="{% url 'hall_of_fame' %}" class="text-gray-300 hover:text-white hover:bg-white/5 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300">Hall of Fame</a>
+                        {% if request.user.is_staff %}
+                        <a href="{% url 'command_center' %}" class="text-gray-300 hover:text-white hover:bg-white/5 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300">Command Center</a>
+                        <a href="{% url 'analytics:roi_dashboard' %}" class="text-gray-300 hover:text-white hover:bg-white/5 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300">ROI</a>
+                        {% endif %}
                     </div>
                 </div>
                 <div class="flex items-center space-x-4">

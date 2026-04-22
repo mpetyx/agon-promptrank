@@ -6,12 +6,41 @@
         <div class="sm:flex-auto">
             <h1 class="text-base font-semibold leading-6 text-white text-3xl">Agon Promptrank</h1>
             <p class="mt-2 text-sm text-gray-400">A strict, anti-cheat gamified platform for AI tool usage.</p>
+            {% if current_season %}
+            <p class="mt-1 text-xs uppercase tracking-widest text-indigo-300">
+                🏁 Active Season: <span class="font-bold text-white">{{ current_season.name }}</span>
+                <span class="text-gray-400">— ends {{ current_season.end_date|date:"M j, Y" }}</span>
+            </p>
+            {% endif %}
         </div>
-        <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none flex space-x-2">
-            <button hx-get="/?filter=all_time" hx-target="#arena_results" class="block rounded-md bg-purple-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-purple-500">All-Time</button>
-            <button hx-get="/?filter=this_week" hx-target="#arena_results" class="block rounded-md bg-gray-700 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-gray-600">This Week</button>
+        <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none flex flex-wrap gap-2">
+            <button hx-get="/?filter=all_time" hx-target="#arena_results" hx-push-url="false"
+                class="rounded-md {% if filter_mode == 'all_time' %}bg-purple-600{% else %}bg-gray-700{% endif %} px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-purple-500">All-Time</button>
+            {% if current_season %}
+            <button hx-get="/?filter=season" hx-target="#arena_results" hx-push-url="false"
+                class="rounded-md {% if filter_mode == 'season' %}bg-purple-600{% else %}bg-gray-700{% endif %} px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-purple-500">Current Season</button>
+            {% endif %}
+            <button hx-get="/?filter=this_week" hx-target="#arena_results" hx-push-url="false"
+                class="rounded-md {% if filter_mode == 'this_week' %}bg-purple-600{% else %}bg-gray-700{% endif %} px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-purple-500">This Week</button>
         </div>
     </div>
+
+    <!-- Live Action Ticker -->
+    <div class="mt-8 glass-panel sm:rounded-2xl p-5 border border-white/5 relative overflow-hidden">
+        <div class="absolute -right-8 -top-8 w-32 h-32 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="flex items-center justify-between mb-3">
+            <h2 class="font-heading text-lg md:text-xl font-bold text-white flex items-center gap-2">
+                <span class="text-emerald-400 animate-pulse">●</span> Live Action Feed
+            </h2>
+            <span class="text-[10px] uppercase tracking-widest text-gray-400">auto-refresh · 4s</span>
+        </div>
+        <div id="action_ticker"
+             hx-get="{% url 'feed_poll' %}"
+             hx-trigger="load, every 4s"
+             hx-swap="innerHTML"
+             class="space-y-2 max-h-64 overflow-y-auto pr-1"></div>
+    </div>
+
     <div class="mt-8 flow-root">
         <!-- Live Clashes Section -->
         {% if clashes_data %}
@@ -25,18 +54,17 @@
                     <div class="absolute -right-10 -top-10 w-32 h-32 bg-indigo-500/10 rounded-full blur-2xl group-hover:bg-indigo-500/20 transition-all"></div>
                     <div class="absolute -left-10 -bottom-10 w-32 h-32 bg-pink-500/10 rounded-full blur-2xl group-hover:bg-pink-500/20 transition-all"></div>
                     <h3 class="text-lg font-bold text-white text-center mb-4 relative z-10">{{ cdata.clash.name }}</h3>
-                    
+
                     <div class="flex justify-between text-sm font-black uppercase tracking-wider mb-2 relative z-10 w-full px-1">
                         <span class="text-indigo-400 truncate pr-2">{{ cdata.clash.department1.name }} <span class="text-white/50 font-normal">({{ cdata.d1_score|floatformat:1 }})</span></span>
                         <span class="text-pink-400 truncate pl-2 text-right"><span class="text-white/50 font-normal">({{ cdata.d2_score|floatformat:1 }})</span> {{ cdata.clash.department2.name }}</span>
                     </div>
-                    
-                    <!-- Tug of War Bar -->
+
                     <div class="w-full bg-gray-800 rounded-full h-4 overflow-hidden flex shadow-inner relative z-10">
                         <div class="bg-gradient-to-r from-indigo-600 to-indigo-400 h-4 transition-all duration-1000 ease-out" style="width: {{ cdata.d1_pct }}%"></div>
                         <div class="bg-gradient-to-l from-pink-600 to-pink-400 h-4 transition-all duration-1000 ease-out" style="width: {{ cdata.d2_pct }}%"></div>
                     </div>
-                    
+
                     {% if cdata.d1_pct > 50 %}
                     <p class="text-[11px] font-bold uppercase tracking-wider text-center text-indigo-300 mt-4 relative z-10">{{ cdata.clash.department1.name }} is dominating!</p>
                     {% elif cdata.d2_pct > 50 %}
